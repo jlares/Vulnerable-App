@@ -15,7 +15,11 @@
                             <hr>
                             <label>Result:</label>
                             <div>
-                                <pre ng-bind-html="vm.searchResults">
+                              <!-- XSS Defense:
+                                -- <pre ng-bind-html="vm.searchResults"> // this performs data sanitization
+                                ++ <pre ng-bind="vm.searchResults">  // this performes data escaping
+                              -->
+                                <pre ng-bind="vm.searchResults">
                                 </pre>
                             </div>
                         </div>

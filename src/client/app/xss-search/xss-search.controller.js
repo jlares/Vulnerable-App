@@ -22,9 +22,14 @@
         function search(searchTerm) {
             dataservice.search(searchTerm)
                 .then(function(response) {
-                    // Intentionally trusting as HTML for demonstration purposes
+
+                    // Intentionally trusting as HTML for demonstration purposes (vulnerable code)
+                    // console.log('Search response: ', response);
+                    // vm.searchResults = $sce.trustAsHtml(response);
+
+                    // Defense against XSS: not trust input as HTML
                     console.log('Search response: ', response);
-                    vm.searchResults = $sce.trustAsHtml(response);
+                    vm.searchResults = response;
                 })
                 .catch(function(error) {
                     logger.error(error);
