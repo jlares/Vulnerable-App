@@ -1,6 +1,8 @@
 var router = require('express').Router();
 var four0four = require('./utils/404')();
 var data = require('./data');
+// This is a module used to defend against XSS.
+var xssFilters = require('xss-filters');
 data.profile = {};
 
 router.get('/people', getPeople);
@@ -26,7 +28,8 @@ function search(req, res, next) {
 
     // For demo purposes we're just going to send back the search term received
     console.log(req.query.searchTerm);
-    res.status(200).send(req.query.searchTerm);
+     // Escape the request's query by using xssFilters before sending the response.
+    res.status(200).send(xssFilters.inHTMLData(req.query.searchTerm));
 }
 
 function getProfile(req, res, next) {
