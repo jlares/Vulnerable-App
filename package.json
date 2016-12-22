@@ -12,6 +12,7 @@
     "body-parser": "^1.8.2",
     "cookie-parser": "^1.4.1",
     "express": "^4.9.3",
+    "lusca": "^1.4.1",
     "morgan": "^1.1.1",
     "serve-favicon": "^2.0.1",
     "xss-filters": "^1.2.7"
