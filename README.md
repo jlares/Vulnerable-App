@@ -4,8 +4,11 @@ There are two applications within this repository that were generated from the H
 # Securing vulnerable-app
 Branch `secure` contains a version of the app after implementing the following security measures:
 
-1. An input handling defense against Cross-Site Scripting (XSS) at both the client (Angular) and server (NodeJS) layers.
-2. A Content Security Policy to further defend the app against XSS.
+1. Protect data from extraction:
+  - Input handling defense against Cross-Site Scripting (XSS) at both the client (Angular) and server (NodeJS) layers.
+  - Content Security Policy to further defend the app against XSS.
+2. Hide network traffic from snooping
+  - Prevent MIM attacks by implementing Transport Layer Security (SSL), which enforces communication over HTTPS and encrypts payloads over the network using certificates. Note that this certificate is self-signed, reason for which it should only be used for development and not for production (browsers would not recognize its signature key as a trustworthy one).
 
 The commit logs within this branch document the process of implementing these security measures in the vulnerable-app.
 
