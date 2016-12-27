@@ -62,9 +62,31 @@ switch (environment){
         break;
 }
 
-app.listen(port, function() {
-    console.log('Express server listening on port ' + port);
-    console.log('env = ' + app.get('env') +
-        '\n__dirname = ' + __dirname  +
-        '\nprocess.cwd = ' + process.cwd());
-});
+// Start server and listen via HTTPS.
+
+var https = require('https');
+var fs = require('fs');
+
+// This variable specifies the values for the key and certificate (dev only)
+var options = {
+  key: fs.readFileSync('./vulnapp-key.pem'),
+  cert: fs.readFileSync('./vulnapp-cert.pem')
+};
+
+// Start the server and pass options variable so that our app uses the key and
+// certificate. Note that this certificate is self-signed and therefore should
+// be only used for development (never in production).
+https.createServer(options, app).listen(port, function() {
+  console.log('Express server listening on port ' + port);
+  console.log('env = ' + app.get('env') +
+          '\n__dirname = ' + __dirname  +
+          '\nprocess.cwd = ' + process.cwd());
+})
+
+// Start server and listen via HTTP.
+// app.listen(port, function() {
+//     console.log('Express server listening on port ' + port);
+//     console.log('env = ' + app.get('env') +
+//         '\n__dirname = ' + __dirname  +
+//         '\nprocess.cwd = ' + process.cwd());
+// });
