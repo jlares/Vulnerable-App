@@ -1,6 +1,8 @@
 /*jshint node:true*/
 'use strict';
 
+// Modules
+
 var express = require('express');
 var app = express();
 app.disable('x-powered-by');
@@ -10,13 +12,21 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var port = process.env.PORT || 8001;
 var four0four = require('./utils/404')();
-// This module is used to establish a Content Security Policy.
-var lusca = require('lusca');
-
 var environment = process.env.NODE_ENV;
+// Used to create a Content Security Policy (CSP) and defend against Cross-Site
+// Request Forgery (CSRF).
+var lusca = require('lusca');
+// Used to defend against CSRF.
+var session = require('express-session');
 
+// Establish an user session
+app.use(session({ secret: 'abc' }));
 
-// Use  the Lusca Module's CSP method.
+// Let the Lusca CSRF module know that client-side uses Angular so that a synchronizer
+// token pattern can be effectively used.
+app.use(lusca.csrf({ angular: true }));
+
+// Establish a CSP to further mitigate possibilities of XSS.
 app.use(lusca.csp({
   policy: {
     'default-src': '\'self\'',
@@ -30,6 +40,16 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(logger('dev'));
+
+// Perform header checks (Defense against CSRF).
+
+// This middleware checks the Origin and Referer headers of POST requests if
+// these are provided. It serves as a defense against CSRF.
+var headerCheck = require('./utils/header-check');
+// Valid Origin domain(s).
+var whitelist = ['https://localhost:8001'];
+app.use(headerCheck(whitelist));
+
 
 app.use('/api', require('./routes'));
 
@@ -83,7 +103,8 @@ https.createServer(options, app).listen(port, function() {
           '\nprocess.cwd = ' + process.cwd());
 })
 
-// Start server and listen via HTTP.
+
+// Start server and listen via HTTP (DISABLED AS A SECURITY MEASURE).
 // app.listen(port, function() {
 //     console.log('Express server listening on port ' + port);
 //     console.log('env = ' + app.get('env') +
