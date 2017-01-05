@@ -7,8 +7,11 @@ Branch `secure` contains a version of the app after implementing the following s
 1. Protect data from extraction:
   - Input handling defense against Cross-Site Scripting (XSS) at both the client (Angular) and server (NodeJS) layers.
   - Content Security Policy to further defend the app against XSS.
-2. Hide network traffic from snooping
-  - Prevent MIM attacks by implementing Transport Layer Security (SSL), which enforces communication over HTTPS and encrypts payloads over the network using certificates. Note that this certificate is self-signed, reason for which it should only be used for development and not for production (browsers would not recognize its signature key as a trustworthy one).
+2. Hide network traffic from snooping:
+  - Defend against MIM attacks by implementing Transport Layer Security (SSL), which enforces communication over HTTPS and encrypts payloads over the network using certificates. Note that this certificate is self-signed, reason for which it should only be used for development and not for production (browsers would not recognize its signature key as a trustworthy one).
+3. Ensure legitimacy of requests:
+  - Defend against Cross-Site Request Forgery (CSRF) attacks by implementing header checks and synchronizer token pattern.
+  
 
 The commit logs within this branch document the process of implementing these security measures in the vulnerable-app.
 
