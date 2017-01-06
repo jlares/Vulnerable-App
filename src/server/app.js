@@ -26,12 +26,18 @@ app.use(session({ secret: 'abc' }));
 // token pattern can be effectively used.
 app.use(lusca.csrf({ angular: true }));
 
-// Establish a CSP to further mitigate possibilities of XSS.
+
+// Block content Hijacking by denying attempts to load the site's content into an iframe
+// in any site other than our domain (https://localhost:8001 in this case).
+app.use(lusca.xframe('SAMEORIGIN'));
+
+// Establish a CSP to further mitigate possibilities of XSS and content hijacking.
 app.use(lusca.csp({
   policy: {
     'default-src': '\'self\'',
     'style-src': '\'self\'',
-    'img-src': '\'self\' data:'
+    'img-src': '\'self\' data:',
+    'frame-acestors': '\'self\''
   }
 }));
 
